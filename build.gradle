@@ -25,7 +25,6 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation "org.springdoc:springdoc-openapi-ui:1.5.9"
-    implementation 'com.mashape.unirest:unirest-java:1.4.9'
 
     compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
