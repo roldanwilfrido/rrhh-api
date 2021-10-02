@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
-    @Query("SELECT p FROM Employee p WHERE p.position.id = ?1 AND p.person.name = ?2 ORDER BY p.salary DESC")
-    List<Employee> getByPositionAndPersonName(Integer position, String name);
+    List<Employee> findByPosition_IdAndPerson_NameContainingOrderBySalaryDesc(Integer position, String name);
 
     @Query("SELECT p FROM Employee p WHERE p.position.id = ?1 ORDER BY p.salary DESC")
     List<Employee> getByPosition(Integer position);

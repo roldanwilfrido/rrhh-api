@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "name": "dev",
+    "employees": [
+      {
+        "id": 1,
+        "salary": 2000,
+        "person": {
+          "id": 1,
+          "name": "Camilo",
+          "lastName": "ruiz",
+          "address": "cra",
+          "cellphone": "124",
+          "cityName": "Medellin"
+        }
+      },
+      {
+        "id": 2,
+        "salary": 1000,
+        "person": {
+          "id": 2,
+          "name": "Andres",
+          "lastName": "escobar",
+          "address": "cra",
+          "cellphone": "1244",
+          "cityName": "Envigado"
+        }
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "qa",
+    "employees": [
+      {
+        "id": 3,
+        "salary": 1500,
+        "person": {
+          "id": 3,
+          "name": "luis",
+          "lastName": "perez",
+          "address": "cra",
+          "cellphone": "124",
+          "cityName": "Medellin"
+        }
+      },
+      {
+        "id": 4,
+        "salary": 1000,
+        "person": {
+          "id": 4,
+          "name": "pedro",
+          "lastName": "castro",
+          "address": "cra",
+          "cellphone": "1244",
+          "cityName": "Envigado"
+        }
+      }
+    ]
+  }
+]

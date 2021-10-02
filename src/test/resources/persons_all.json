@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "name": "Camilo",
+    "lastName": "ruiz",
+    "address": "cra",
+    "cellphone": "124",
+    "cityName": "Medellin"
+  },
+  {
+    "id": 2,
+    "name": "Andres",
+    "lastName": "escobar",
+    "address": "cra",
+    "cellphone": "1244",
+    "cityName": "Envigado"
+  },
+  {
+    "id": 3,
+    "name": "luis",
+    "lastName": "perez",
+    "address": "cra",
+    "cellphone": "124",
+    "cityName": "Medellin"
+  },
+  {
+    "id": 4,
+    "name": "pedro",
+    "lastName": "castro",
+    "address": "cra",
+    "cellphone": "1244",
+    "cityName": "Envigado"
+  }
+]

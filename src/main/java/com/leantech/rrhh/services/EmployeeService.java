@@ -38,51 +38,21 @@ public class EmployeeService {
         List<EmployeeResponseDto> list = new ArrayList<>();
         if (!Objects.equals(dto.getPosition(), -1) && !Objects.equals(dto.getName(), "-1")) {
             PositionDto positionDto = positionService.getById(dto.getPosition());
-            List<Employee> employees = repository.getByPositionAndPersonName(dto.getPosition(), dto.getName());
-            EmployeeResponseDto employeeResponseDto = new EmployeeResponseDto();
-            employeeResponseDto.setId(positionDto.getId());
-            employeeResponseDto.setName(positionDto.getName());
-            if (!employees.isEmpty()) {
-                employeeResponseDto.setEmployees(
-                        employees.stream().map(this::dtoBuilder)
-                                .collect(Collectors.toList()));
-            }
-            list.add(employeeResponseDto);
+            List<Employee> employees = repository.findByPosition_IdAndPerson_NameContainingOrderBySalaryDesc(dto.getPosition(), dto.getName());
+            populateEmployeeResponseList(list, positionDto, employees);
         } else if (!Objects.equals(dto.getPosition(), -1)) {
             PositionDto positionDto = positionService.getById(dto.getPosition());
             List<Employee> employees = repository.getByPosition(dto.getPosition());
-            EmployeeResponseDto employeeResponseDto = new EmployeeResponseDto();
-            employeeResponseDto.setId(positionDto.getId());
-            employeeResponseDto.setName(positionDto.getName());
-            employeeResponseDto.setEmployees(
-                    employees.stream().map(this::dtoBuilder)
-                            .collect(Collectors.toList()));
-            list.add(employeeResponseDto);
+            populateEmployeeResponseList(list, positionDto, employees);
         } else if (!Objects.equals(dto.getName(), "-1")) {
             positionService.getAll().forEach(positionDto -> {
-                List<Employee> employees = repository.getByPositionAndPersonName(dto.getPosition(), dto.getName());
-                EmployeeResponseDto employeeResponseDto = new EmployeeResponseDto();
-                employeeResponseDto.setId(positionDto.getId());
-                employeeResponseDto.setName(positionDto.getName());
-                if (!employees.isEmpty()) {
-                    employeeResponseDto.setEmployees(
-                            employees.stream().map(this::dtoBuilder)
-                                    .collect(Collectors.toList()));
-                }
-                list.add(employeeResponseDto);
+                List<Employee> employees = repository.findByPosition_IdAndPerson_NameContainingOrderBySalaryDesc(positionDto.getId(), dto.getName());
+                populateEmployeeResponseList(list, positionDto, employees);
             });
         } else {
             positionService.getAll().forEach(positionDto -> {
                 List<Employee> employees = repository.getByPosition(positionDto.getId());
-                EmployeeResponseDto employeeResponseDto = new EmployeeResponseDto();
-                employeeResponseDto.setId(positionDto.getId());
-                employeeResponseDto.setName(positionDto.getName());
-                if (!employees.isEmpty()) {
-                    employeeResponseDto.setEmployees(
-                            employees.stream().map(this::dtoBuilder)
-                                    .collect(Collectors.toList()));
-                }
-                list.add(employeeResponseDto);
+                populateEmployeeResponseList(list, positionDto, employees);
             });
         }
 
@@ -95,10 +65,10 @@ public class EmployeeService {
     }
 
     public Employee checksById(Integer id) {
-        Optional<Employee> EmployeeOpt = repository.findById(id);
-        if (EmployeeOpt.isEmpty())
+        Optional<Employee> employeeOpt = repository.findById(id);
+        if (employeeOpt.isEmpty())
             throw new NotFoundException(MessageFormat.format(Const.OBJ_NOT_FOUND, Const.EMPLOYEE, id));
-        return EmployeeOpt.get();
+        return employeeOpt.get();
     }
 
     public void checkIfAlreadyExists(Integer position, Integer person) {
@@ -109,14 +79,14 @@ public class EmployeeService {
 
     public void addOrUpdate(EmployeeDto dto) {
         if (hasNoChangesOrAlreadyExists(dto)) return;
-        Employee Employee = builder(dto);
-        repository.save(Employee);
+        Employee employee = builder(dto);
+        repository.save(employee);
         log.info(MessageFormat.format(Const.OPERATION_DONE, Const.EMPLOYEE));
     }
 
     public void remove(Integer id) {
-        Employee Employee = checksById(id);
-        repository.delete(Employee);
+        Employee employee = checksById(id);
+        repository.delete(employee);
         log.info(MessageFormat.format(Const.OPERATION_DONE, Const.EMPLOYEE));
     }
 
@@ -156,5 +126,17 @@ public class EmployeeService {
         }
         checkIfAlreadyExists(dto.getPosition(), dto.getPerson());
         return false;
+    }
+
+    private void populateEmployeeResponseList(List<EmployeeResponseDto> list, PositionDto positionDto, List<Employee> employees) {
+        EmployeeResponseDto employeeResponseDto = new EmployeeResponseDto();
+        employeeResponseDto.setId(positionDto.getId());
+        employeeResponseDto.setName(positionDto.getName());
+        if (!employees.isEmpty()) {
+            employeeResponseDto.setEmployees(
+                    employees.stream().map(this::dtoBuilder)
+                            .collect(Collectors.toList()));
+        }
+        list.add(employeeResponseDto);
     }
 }
