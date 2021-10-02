@@ -15,4 +15,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
     @Query("SELECT p FROM Employee p WHERE p.position.id = ?1 AND p.person.id = ?2 ORDER BY p.salary DESC")
     Optional<Employee> getByPositionAndPerson(Integer position, Integer person);
+
+    List<Employee> findByPosition_Id(Integer position);
+
+    List<Employee> findByPerson_Id(Integer person);
 }

@@ -4,6 +4,7 @@ import com.leantech.rrhh.exceptions.CustomException;
 import com.leantech.rrhh.exceptions.NotFoundException;
 import com.leantech.rrhh.models.dto.PersonDto;
 import com.leantech.rrhh.models.entities.Person;
+import com.leantech.rrhh.repositories.EmployeeRepository;
 import com.leantech.rrhh.repositories.PersonRepository;
 import com.leantech.rrhh.utils.Const;
 import lombok.extern.log4j.Log4j2;
@@ -19,10 +20,12 @@ import java.util.stream.Collectors;
 @Service
 @Log4j2
 public class PersonService {
+    private EmployeeRepository employeeRepository;
     private PersonRepository repository;
 
     @Autowired
-    public PersonService(PersonRepository repository) {
+    public PersonService(EmployeeRepository employeeRepository, PersonRepository repository) {
+        this.employeeRepository = employeeRepository;
         this.repository = repository;
     }
 
@@ -37,10 +40,10 @@ public class PersonService {
     }
 
     public Person checksById(Integer id) {
-        Optional<Person> PersonOpt = repository.findById(id);
-        if (PersonOpt.isEmpty())
+        Optional<Person> personOpt = repository.findById(id);
+        if (personOpt.isEmpty())
             throw new NotFoundException(MessageFormat.format(Const.OBJ_NOT_FOUND, Const.PERSON, id));
-        return PersonOpt.get();
+        return personOpt.get();
     }
 
     public void checksByNameAndLastName(String name, String lastName) {
@@ -59,8 +62,11 @@ public class PersonService {
     }
 
     public void remove(Integer id) {
-        Person Person = checksById(id);
-        repository.delete(Person);
+        Person person = checksById(id);
+        if (employeeRepository.findByPosition_Id(id).size() > 0) {
+            throw new CustomException(MessageFormat.format(Const.RELATION_EXISTS, Const.PERSON, id));
+        }
+        repository.delete(person);
         log.info(MessageFormat.format(Const.OPERATION_DONE, Const.PERSON));
     }
 

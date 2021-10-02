@@ -4,6 +4,7 @@ import com.leantech.rrhh.exceptions.CustomException;
 import com.leantech.rrhh.exceptions.NotFoundException;
 import com.leantech.rrhh.models.dto.PositionDto;
 import com.leantech.rrhh.models.entities.Position;
+import com.leantech.rrhh.repositories.EmployeeRepository;
 import com.leantech.rrhh.repositories.PositionRepository;
 import com.leantech.rrhh.utils.Const;
 import lombok.extern.log4j.Log4j2;
@@ -19,10 +20,12 @@ import java.util.stream.Collectors;
 @Service
 @Log4j2
 public class PositionService {
+    private EmployeeRepository employeeRepository;
     private PositionRepository repository;
 
     @Autowired
-    public PositionService(PositionRepository repository) {
+    public PositionService(EmployeeRepository employeeRepository, PositionRepository repository) {
+        this.employeeRepository = employeeRepository;
         this.repository = repository;
     }
 
@@ -60,6 +63,10 @@ public class PositionService {
 
     public void remove(Integer id) {
         Position position = checksById(id);
+        if (employeeRepository.findByPerson_Id(id).size() > 0) {
+            throw new CustomException(MessageFormat.format(Const.RELATION_EXISTS, Const.POSITION, id));
+        }
+
         repository.delete(position);
         log.info(MessageFormat.format(Const.OPERATION_DONE, Const.POSITION));
     }
